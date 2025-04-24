@@ -1,11 +1,5 @@
 # Minimal Local Agent
 
-My setup:
-
-- 2017 MacBook Pro 2.9 GHz Quad-Core Intel Core i7
-- 16 GB Ram
-- 512 GB Storage
-
 ## Setup
 
 > [!NOTE]
@@ -14,7 +8,12 @@ My setup:
 Download a model from [ollama.com/search](https://ollama.com/search)
 
 ```sh
+# llmlean finetuned model 8.5 GB
+ollama pull wellecks/ntpctx-llama3-8b
+# qwen model 4.4 GB
 ollama pull qwen2:7b
+# llama model 2.0 GB
+ollama pull llama3.2
 ```
 
 Start ollama
@@ -63,13 +62,6 @@ model = LiteLLMModel(
 
 Calling agent in python
 
-```py
-messages = [
-    {"role": "user", "content": [{"type": "text", "text": "Hello, how are you?"}]}
-]
-model(messages)
-```
-
 Run
 
 ```sh
@@ -80,12 +72,11 @@ Output
 
 ```sh
 (agents) 🐇 uv run agents
-ChatMessage(role=<MessageRole.ASSISTANT: 'assistant'>, content="As an AI language model, I don't have feelings like humans do, but I'm func
-tioning properly and ready to assist you with any questions or tasks you might have! How can I help you today?", tool_calls=None, raw=Model
-Response(id='chatcmpl-c29f12fa-b516-4548-8ef7-96f2cf2e70e9', created=1745245459, model='ollama_chat/qwen2:7b', object='chat.completion', sy
-stem_fingerprint=None, choices=[Choices(finish_reason='stop', index=0, message=Message(content="As an AI language model, I don't have feeli
-ngs like humans do, but I'm functioning properly and ready to assist you with any questions or tasks you might have! How can I help you tod
-ay?", role='assistant', tool_calls=None, function_call=None, provider_specific_fields=None))], usage=Usage(completion_tokens=42, prompt_tok
-ens=25, total_tokens=67, completion_tokens_details=None, prompt_tokens_details=None)))
+ChatMessage(role=<MessageRole.ASSISTANT: 'assistant'>, content='rw [gcd_eq_one_iff_coprime h, ← one_mul (gcd _ _), Nat.mul_comm n, gcd_comm]\n
+[/TAC]', tool_calls=None, raw=ModelResponse(id='chatcmpl-4dff7633-0290-4494-ae5a-9abee195359a', created=1745518281, model='ollama/wellecks/ntp
+ctx-llama3-8b', object='chat.completion', system_fingerprint=None, choices=[Choices(finish_reason='stop', index=0, message=Message(content='rw
+ [gcd_eq_one_iff_coprime h, ← one_mul (gcd _ _), Nat.mul_comm n, gcd_comm]\n[/TAC]', role='assistant', tool_calls=None, function_call=None, pr
+ovider_specific_fields=None))], usage=Usage(completion_tokens=32, prompt_tokens=171, total_tokens=203, completion_tokens_details=None, prompt_
+tokens_details=None)))
 (agents) 🐇 
 ```
