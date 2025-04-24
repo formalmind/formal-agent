@@ -48,21 +48,6 @@ source .venv/bin/activate
 Initialize model with `LiteLLM` in [./src/agents/\_\_init\_\_.py](./src/agents/__init__.py)
 
 ```py
-from smolagents import LiteLLMModel
-
-model = LiteLLMModel(
-    model_id="ollama_chat/qwen2:7b",  # Or try other Ollama-supported models
-    api_base="http://127.0.0.1:11434",  # Default Ollama local server
-    num_ctx=8192,
-)
-
-```
-
-## Start agent
-
-Calling agent in python
-
-```py
 from .llmlean import LLMLean
 from .qwen7b import Qwen7b
 from .llama3 import Llama3
@@ -88,6 +73,8 @@ h : Nat.Coprime m n
     print(agent2.get_messages(prompt))
     print(agent3.get_messages(prompt))
 ```
+
+## Start agent
 
 Run
 
