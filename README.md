@@ -45,7 +45,7 @@ source .venv/bin/activate
 
 ## Initialize model
 
-Initialize model with `LiteLLM` in [./src/agents/\_\_init\_\_.py](./src/agents/__init__.py)
+Initialize `LLMLean` model in [./src/agents/\_\_init\_\_.py](./src/agents/__init__.py)
 
 ```py
 from .llmlean import LLMLean
