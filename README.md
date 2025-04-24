@@ -31,7 +31,7 @@ Setup virtual environment
 
 ```sh
 # clone this repo
-git clone https://github.com/mmsaki/agents.git
+git clone https://github.com/formalmind/formal-agent.git
 
 # enter project directory
 cd agents
