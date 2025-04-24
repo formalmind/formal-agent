@@ -1,14 +1,24 @@
-from smolagents import LiteLLMModel
-
-model = LiteLLMModel(
-    model_id="ollama_chat/qwen2:7b",  # Or try other Ollama-supported models
-    api_base="http://127.0.0.1:11434",  # Default Ollama local server
-    num_ctx=8192,
-)
+from .llmlean import LLMLean
+from .qwen7b import Qwen7b
+from .llama3 import Llama3
+from .prompt import make_lean_tac_prompt
 
 
 def main() -> None:
-    messages = [
-        {"role": "user", "content": [{"type": "text", "text": "Hello, how are you?"}]}
-    ]
-    print(model(messages))
+    ctx = """import Mathlib.Data.Nat.Prime
+
+theorem test_thm (m n : Nat) (h : m.Coprime n) : m.gcd n = 1 := by
+"""
+    state = """m n : ℕ
+h : Nat.Coprime m n
+⊢ Nat.gcd m n = 1
+"""
+    prompt = make_lean_tac_prompt(ctx, state)
+
+    agent = LLMLean()
+    agent2 = Qwen7b()
+    agent3 = Llama3()
+
+    print(agent.get_messages(prompt))
+    print(agent2.get_messages(prompt))
+    print(agent3.get_messages(prompt))
