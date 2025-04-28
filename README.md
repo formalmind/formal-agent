@@ -48,13 +48,26 @@ source .venv/bin/activate
 Initialize `LLMLean` model in [./src/agents/\_\_init\_\_.py](./src/agents/__init__.py)
 
 ```py
+from smolagents import CodeAgent
 from .llmlean import LLMLean
-from .qwen7b import Qwen7b
-from .llama3 import Llama3
 from .prompt import make_lean_tac_prompt
+from phoenix.otel import register
+from openinference.instrumentation.smolagents import SmolagentsInstrumentor
+
+register()
+SmolagentsInstrumentor().instrument()
 
 
 def main() -> None:
+    llmlean = LLMLean()
+
+    lean4_agent = CodeAgent(
+        tools=[],
+        model=llmlean.model,
+        name="lean4_agent",
+        description="Generetes Lean 4 tactics for you.",
+    )
+
     ctx = """import Mathlib.Data.Nat.Prime
 
 theorem test_thm (m n : Nat) (h : m.Coprime n) : m.gcd n = 1 := by
@@ -63,15 +76,9 @@ theorem test_thm (m n : Nat) (h : m.Coprime n) : m.gcd n = 1 := by
 h : Nat.Coprime m n
 ⊢ Nat.gcd m n = 1
 """
+
     prompt = make_lean_tac_prompt(ctx, state)
-
-    agent = LLMLean()
-    agent2 = Qwen7b()
-    agent3 = Llama3()
-
-    print(agent.get_messages(prompt))
-    print(agent2.get_messages(prompt))
-    print(agent3.get_messages(prompt))
+    print(lean4_agent.run(prompt))
 ```
 
 ## Start agent
@@ -82,15 +89,12 @@ Run
 uv run agents
 ```
 
-Output
+## Debbging Model
 
-```sh
-(agents) 🐇 uv run agents
-ChatMessage(role=<MessageRole.ASSISTANT: 'assistant'>, content='rw [gcd_eq_one_iff_coprime h, ← one_mul (gcd _ _), Nat.mul_comm n, gcd_comm]\n
-[/TAC]', tool_calls=None, raw=ModelResponse(id='chatcmpl-4dff7633-0290-4494-ae5a-9abee195359a', created=1745518281, model='ollama/wellecks/ntp
-ctx-llama3-8b', object='chat.completion', system_fingerprint=None, choices=[Choices(finish_reason='stop', index=0, message=Message(content='rw
- [gcd_eq_one_iff_coprime h, ← one_mul (gcd _ _), Nat.mul_comm n, gcd_comm]\n[/TAC]', role='assistant', tool_calls=None, function_call=None, pr
-ovider_specific_fields=None))], usage=Usage(completion_tokens=32, prompt_tokens=171, total_tokens=203, completion_tokens_details=None, prompt_
-tokens_details=None)))
-(agents) 🐇 
+Run the phoenix server from your environment
+
+```py
+uv run python -m phoenix.server.main serve
 ```
+
+Go to [`http://localhost:6006`](http://localhost:6006) to agent traces

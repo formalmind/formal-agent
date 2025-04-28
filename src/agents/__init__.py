@@ -1,10 +1,23 @@
+from smolagents import CodeAgent
 from .llmlean import LLMLean
-from .qwen7b import Qwen7b
-from .llama3 import Llama3
 from .prompt import make_lean_tac_prompt
+from phoenix.otel import register
+from openinference.instrumentation.smolagents import SmolagentsInstrumentor
+
+register()
+SmolagentsInstrumentor().instrument()
 
 
 def main() -> None:
+    llmlean = LLMLean()
+
+    lean4_agent = CodeAgent(
+        tools=[],
+        model=llmlean.model,
+        name="lean4_agent",
+        description="Generetes Lean 4 tactics for you.",
+    )
+
     ctx = """import Mathlib.Data.Nat.Prime
 
 theorem test_thm (m n : Nat) (h : m.Coprime n) : m.gcd n = 1 := by
@@ -13,12 +26,6 @@ theorem test_thm (m n : Nat) (h : m.Coprime n) : m.gcd n = 1 := by
 h : Nat.Coprime m n
 ⊢ Nat.gcd m n = 1
 """
+
     prompt = make_lean_tac_prompt(ctx, state)
-
-    agent = LLMLean()
-    agent2 = Qwen7b()
-    agent3 = Llama3()
-
-    print(agent.get_messages(prompt))
-    print(agent2.get_messages(prompt))
-    print(agent3.get_messages(prompt))
+    print(lean4_agent.run(prompt))
